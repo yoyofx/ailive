@@ -1,0 +1,13 @@
+
+langchain
+langchain-community
+langchain-openai
+huggingface-hub
+sentence-transformers
+tiktoken
+Chroma
+faiss-cpu
+duckduckgo-search
+unstructured
+python-libmagic
+#python-magic-bin==0.4.14
