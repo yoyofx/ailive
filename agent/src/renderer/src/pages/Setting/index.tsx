@@ -60,7 +60,7 @@ const Setting = () => {
           }}
         >
           使用
-          <a href="https://ghproxy.com" target="_blank">
+          <a href="https://mirror.ghproxy.com" target="_blank">
             ghproxy
           </a>
           加速
