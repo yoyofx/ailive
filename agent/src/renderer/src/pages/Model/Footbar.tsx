@@ -4,7 +4,7 @@ import styled from 'styled-components'
 const Wrapper = styled.div`
 border: 1px solid rgba(224, 186, 140, 0.62);
 border-radius: 12px;
-box-shadow: 0 6px 25px 8px rgba(191, 158, 118, 0.2);
+box-shadow: 0 6px 18px 5px rgba(191, 158, 118, 0.2);
 left: 20%;
 font-size: 14px;
 line-height: 24px;
