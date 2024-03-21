@@ -1,6 +1,6 @@
 import os from 'os'
 import { join } from 'path'
-import { app, BrowserWindow, protocol, session } from 'electron'
+import { app, BrowserWindow, protocol, session,ipcMain } from 'electron'
 import windowStateKeeper from 'electron-window-state'
 import remoteMain from '@electron/remote/main'
 
@@ -51,9 +51,10 @@ app
   })
   .then(async () => {
     const options = {
-      title: 'PPet',
+      title: 'Ailive',
       alwaysOnTop: true,
       autoHideMenuBar: true,
+      acceptFirstMouse: true,
       hasShadow: false,
       transparent: true,
       frame: false,
@@ -75,6 +76,7 @@ app
     }
 
     const win = await createWindow(options)
+
     if (win) {
       mainWindowState.manage(win)
 
@@ -105,4 +107,9 @@ app.on('activate', () => {
   if (allWindows.length) {
     allWindows[0].focus()
   }
+})
+
+ipcMain.on('set-ignore-mouse-events', (event, ignore, options) => {
+  const win = BrowserWindow.fromWebContents(event.sender)
+  win?.setIgnoreMouseEvents(ignore, options)
 })

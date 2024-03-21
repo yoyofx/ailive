@@ -7,7 +7,7 @@ const store = new Store<{
   showTool: boolean
   language: 'zh' | 'en'
 }>({
-  name: 'ppet-config',
+  name: 'agent-config',
   defaults: {
     alwaysOnTop: true,
     ignoreMouseEvents: false,

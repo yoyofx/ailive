@@ -6,6 +6,7 @@ import LegacyRender from './Legacy'
 import CurrentRender from './Current'
 import Toolbar from './Toolbar'
 import Tips, { TipsType } from './Tips'
+import Footbar from './Footbar'
 import { useDispatch, useSelector } from 'react-redux'
 import zhTips from './tips/zh.json'
 import enTips from './tips/en.json'
@@ -136,6 +137,7 @@ const Model = () => {
       }
     }
 
+
     window.addEventListener('blur', handleBlur)
     return () => {
       window.removeEventListener('blur', handleBlur)
@@ -191,6 +193,16 @@ const Model = () => {
     })
   }
 
+  const doubleClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
+    let text: String = "hello"
+    handleMessageChange({
+     text,
+      timeout: 4000,
+      priority: 8,
+    })
+  }
+
+
   const tipJSONs = language === 'en' ? enTips : zhTips
 
   return (
@@ -198,12 +210,15 @@ const Model = () => {
       border={resizable}
       onMouseOver={isMoc3 ? undefined : handleMouseOver}
       onClick={isMoc3 ? undefined : handleClick}
+      onDoubleClick={doubleClick}
     >
       <Tips {...tips}></Tips>
       {showTool && <Toolbar onShowMessage={handleMessageChange}></Toolbar>}
       <RenderWrapper>
         <Render {...cavSize} modelPath={modelPath}></Render>
       </RenderWrapper>
+
+      <Footbar></Footbar>
     </Wrapper>
   )
 }
