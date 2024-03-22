@@ -12,10 +12,10 @@ chat = create_llm_openai( apikey='fk224285-rmfTvLRKQyarQdyF5YBX6IlfKVKTj1y1',
                          apibase='https://openai.api2d.net/v1')
 embeddings = load_huggingface_embeddings('all-MiniLM-L6-v2')
 
-doc_url = "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-february-9-2023"
+#doc_url = "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-february-9-2023"
 
-documents = load_docs_by_extension(doc_url)
-#documents = load_docs_by_extension('./README.md')
+#documents = load_docs_by_extension(doc_url)
+documents = load_docs_by_extension('./README.md')
 
 print (f'There are {len(documents)} document(s) in this document.')
 print (f'There are {len(documents[0].page_content)} characters in the first page of your document.')
