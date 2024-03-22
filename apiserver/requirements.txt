@@ -10,5 +10,6 @@ faiss-cpu
 duckduckgo-search
 unstructured
 fastapi
+websockets
 uvicorn
 #python-magic-bin==0.4.14

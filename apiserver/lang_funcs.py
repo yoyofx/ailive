@@ -4,7 +4,8 @@ from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
 from langchain.vectorstores import Chroma,FAISS,VectorStore
 from langchain_core.documents import Document
-from langchain.document_loaders import TextLoader,PyMuPDFLoader,DirectoryLoader,UnstructuredURLLoader
+from langchain.document_loaders import TextLoader,PyMuPDFLoader,DirectoryLoader
+from langchain_community.document_loaders import WebBaseLoader
 from langchain.document_loaders.bilibili import BiliBiliLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter,CharacterTextSplitter
 from langchain.memory import ConversationBufferWindowMemory
@@ -45,11 +46,11 @@ def load_docs_by_extension(file_path:str,glob="**/*"):
         return DirectoryLoader(file_path, glob).load()
     else:
         if file_path.startswith("http"):
-            return UnstructuredURLLoader([file_path]).load()
+            return WebBaseLoader([file_path]).load()
         if file_path.endswith(".txt"):
-            return TextLoader(file_path).load()
+            return TextLoader(file_path,encoding="utf-8").load()
         elif file_path.endswith(".md"):
-            return TextLoader(file_path).load()
+            return TextLoader(file_path,encoding="utf-8").load()
         elif file_path.endswith(".pdf"):
             return PyMuPDFLoader(file_path).load()
         # Add more conditions for other file types
@@ -82,7 +83,7 @@ def create_vectorstore_faiss(chunks, embedding_model, name:str, storing_path="./
     USERGUIDE_INDEX = storing_path + name
     if os.path.exists(USERGUIDE_INDEX):
         print('load exists local index the embeddings using FAISS')
-        return FAISS.load_local(USERGUIDE_INDEX,embedding_model)
+        return FAISS.load_local(USERGUIDE_INDEX,embedding_model,allow_dangerous_deserialization=True)
 
     print('Creating the embeddings using FAISS')
     chunks = split_docs(chunks)
