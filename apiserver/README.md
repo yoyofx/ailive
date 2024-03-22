@@ -8,6 +8,15 @@
 python -m pip install -U pip setuptools
 ```
 
+
+# apiserver.py 
+```sh
+pip install -r .\requirements.txt
+uvicorn apiserver:app --reload
+```
+
+
+
 # python-libmagic -> libmagic
 不同操作系统需要安装不同的依赖库
 ## 安装 libmagic:
@@ -33,9 +42,3 @@ Install the latest Windows SDK (under Native development in the installer).
 Optional: Set $env:PlatformToolset to your toolset version before building, if it doesn't detect it.
 
 Update to the latest setuptools Python package version.
-
-# apiserver.py 
-```sh
-pip install -r .\requirements.txt
-uvicorn apiserver:app --reload
-```
