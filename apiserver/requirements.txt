@@ -9,8 +9,6 @@ Chroma
 faiss-cpu
 duckduckgo-search
 unstructured
-python-magic
-python-libmagic
 fastapi
 uvicorn
 #python-magic-bin==0.4.14
