@@ -83,7 +83,8 @@ def create_vectorstore_faiss(chunks, embedding_model, name:str, storing_path="./
     USERGUIDE_INDEX = storing_path + name
     if os.path.exists(USERGUIDE_INDEX):
         print('load exists local index the embeddings using FAISS')
-        return FAISS.load_local(USERGUIDE_INDEX,embedding_model,allow_dangerous_deserialization=True)
+        #allow_dangerous_deserialization=True
+        return FAISS.load_local(USERGUIDE_INDEX,embedding_model)
 
     print('Creating the embeddings using FAISS')
     chunks = split_docs(chunks)

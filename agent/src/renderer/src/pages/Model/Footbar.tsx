@@ -21,14 +21,34 @@ transition: opacity 0.6s;
 }
 `
 
-  const Footbar: FC = (props) => {
-    const inputReference = useRef(null);
+
+export type FootbarType = {
+  onEnterPress: () => void
+}
+
+  const Footbar: FC<FootbarType> = (props:FootbarType) => {
+    let inputReference = useRef(null);
+    const divReference = useRef(null);
 
     return (
-        <Wrapper onFocus={() => inputReference.current.focus()}>
-          <input ref={inputReference} autoFocus style={{margin:8,background:'transparent',color:'azure',
+        <Wrapper id="chatbox" ref={divReference} onFocus={() => inputReference?.current?.focus()}>
+          <input id="input" ref={ inputReference } autoFocus style={{margin:8,background:'transparent',color:'azure',
               border:'none',outline:'none',width:'80%',justifyContent:'center' }}
               placeholder='请跟我聊天吧...'
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  console.log('esc')
+                  const chatbox = document.getElementById('chatbox')
+                  chatbox.style.opacity = '0'
+                  inputReference.current.value = ''
+                } else if (e.key === 'Enter') {
+                  inputReference.current.value = ''
+                  props.onEnterPress()
+                }
+              }}
+              onBlur={() => {
+                inputReference?.current?.focus()
+              }}
               ></input>
         </Wrapper>
       )

@@ -1,7 +1,10 @@
 
 langchain
 langchain-community
+langchain-core                 
 langchain-openai
+langchain-text-splitters
+SQLAlchemy==2.0.0
 huggingface-hub
 sentence-transformers
 tiktoken

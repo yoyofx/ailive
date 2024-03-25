@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
+import WebSocket from 'ws';
 
 import { debounce } from '@src/renderer/src/utils'
 import LegacyRender from './Legacy'
@@ -11,6 +12,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import zhTips from './tips/zh.json'
 import enTips from './tips/en.json'
 import { Dispatch, RootState } from '../../store'
+
+
 
 interface ITips {
   mouseover: Mouseover[]
@@ -204,6 +207,20 @@ const Model = () => {
 
 
   const tipJSONs = language === 'en' ? enTips : zhTips
+
+  const ws = new WebSocket('ws://localhost:8000/ws');
+
+  ws.on('error', console.error);
+
+  ws.on('open', function open() {
+    console.log('something');
+  });
+
+  ws.on('message', function message(data) {
+    console.log('received: %s', data);
+  });
+
+
 
   return (
     <Wrapper

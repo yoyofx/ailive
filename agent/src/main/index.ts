@@ -1,12 +1,14 @@
 import os from 'os'
 import { join } from 'path'
-import { app, BrowserWindow, protocol, session,ipcMain } from 'electron'
+import { app, BrowserWindow, protocol, session,ipcMain ,globalShortcut } from 'electron'
 import windowStateKeeper from 'electron-window-state'
 import remoteMain from '@electron/remote/main'
+
 
 import './initConfig'
 import initTray from './tray'
 import { createWindow, winPagePathMap } from './window'
+
 
 remoteMain.initialize()
 
@@ -26,12 +28,34 @@ if (app.isPackaged) {
 app.commandLine.appendSwitch('disable-renderer-backgrounding')
 app.commandLine.appendSwitch('disable-background-timer-throttling')
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
+app.commandLine.appendSwitch('enable-features', 'WebSpeechAPI')
 
+let win: BrowserWindow | undefined
 let mainWindowState: windowStateKeeper.State
 
 app
   .whenReady()
   .then(() => {
+    // Register a 'CommandOrControl+X' shortcut listener.
+    const ret = globalShortcut.register('Alt+A', () => {
+      win?.focus()
+
+      const script =`
+        document.getElementById("chatbox").style.opacity="1";
+        document.getElementById("input").focus();
+      `
+      win?.webContents.executeJavaScript(script)
+      console.log('Alt+A is pressed')
+    })
+
+    if (!ret) {
+      console.log('registration failed')
+    }
+
+    // Check whether a shortcut is registered.
+    console.log(globalShortcut.isRegistered('Alt+A'))
+
+
     protocol.registerFileProtocol('file', (request, callback) => {
       const url = request.url.replace('file://', '')
       const decodedUrl = decodeURI(url)
@@ -75,12 +99,17 @@ app
       },
     }
 
-    const win = await createWindow(options)
+    win = await createWindow(options)
+
 
     if (win) {
       mainWindowState.manage(win)
-
       initTray(win)
+      win.on('focus', () => {
+        // 窗口获得焦点时的处理逻辑
+        win?.webContents.executeJavaScript('document.getElementById("input").focus();')
+      });
+    
     }
   })
 
@@ -108,6 +137,15 @@ app.on('activate', () => {
     allWindows[0].focus()
   }
 })
+
+app.on('will-quit', () => {
+  // Unregister a shortcut.
+  globalShortcut.unregister('Alt+A')
+
+  // Unregister all shortcuts.
+  globalShortcut.unregisterAll()
+})
+
 
 ipcMain.on('set-ignore-mouse-events', (event, ignore, options) => {
   const win = BrowserWindow.fromWebContents(event.sender)
