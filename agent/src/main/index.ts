@@ -9,7 +9,6 @@ import './initConfig'
 import initTray from './tray'
 import { createWindow, winPagePathMap } from './window'
 
-
 remoteMain.initialize()
 
 const isWin7 = os.release().startsWith('6.1')
@@ -151,3 +150,4 @@ ipcMain.on('set-ignore-mouse-events', (event, ignore, options) => {
   const win = BrowserWindow.fromWebContents(event.sender)
   win?.setIgnoreMouseEvents(ignore, options)
 })
+

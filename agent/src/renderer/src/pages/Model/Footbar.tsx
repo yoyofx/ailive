@@ -23,7 +23,7 @@ transition: opacity 0.6s;
 
 
 export type FootbarType = {
-  onEnterPress: () => void
+  onEnterPress: (text: string) => void
 }
 
   const Footbar: FC<FootbarType> = (props:FootbarType) => {
@@ -42,8 +42,8 @@ export type FootbarType = {
                   chatbox.style.opacity = '0'
                   inputReference.current.value = ''
                 } else if (e.key === 'Enter') {
+                  props.onEnterPress(inputReference.current.value)
                   inputReference.current.value = ''
-                  props.onEnterPress()
                 }
               }}
               onBlur={() => {

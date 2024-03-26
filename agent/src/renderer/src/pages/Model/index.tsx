@@ -1,6 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import WebSocket from 'ws';
 
 import { debounce } from '@src/renderer/src/utils'
 import LegacyRender from './Legacy'
@@ -151,8 +150,19 @@ const Model = () => {
 
   const Render = isMoc3 ? CurrentRender : LegacyRender
 
+  const tipJSONs = language === 'en' ? enTips : zhTips
+
+
   const handleMessageChange = (nextTips: TipsType) => {
     setTips(nextTips)
+  }
+
+  const showMessage = (text: string, timeout: number) => {
+    handleMessageChange({
+      text: text,
+      timeout: timeout,
+      priority: 9999
+    })
   }
 
   const handleMouseOver: React.MouseEventHandler<HTMLDivElement> = (event) => {
@@ -197,7 +207,7 @@ const Model = () => {
   }
 
   const doubleClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
-    let text: String = "hello"
+    let text: string = "hello"
     handleMessageChange({
      text,
       timeout: 4000,
@@ -205,20 +215,21 @@ const Model = () => {
     })
   }
 
+  const onChat = (text: string) => {
+    ws.send(text)
+  }
 
-  const tipJSONs = language === 'en' ? enTips : zhTips
 
   const ws = new WebSocket('ws://localhost:8000/ws');
 
-  ws.on('error', console.error);
+  ws.onopen =() => {
+    console.log('connected');
+  }
 
-  ws.on('open', function open() {
-    console.log('something');
-  });
-
-  ws.on('message', function message(data) {
-    console.log('received: %s', data);
-  });
+  ws.onmessage = (evt) => {
+    console.log('received: %s', evt.data)
+    showMessage(evt.data, 4000)
+  }
 
 
 
@@ -235,7 +246,7 @@ const Model = () => {
         <Render {...cavSize} modelPath={modelPath}></Render>
       </RenderWrapper>
 
-      <Footbar></Footbar>
+      <Footbar onEnterPress={onChat}></Footbar>
     </Wrapper>
   )
 }
