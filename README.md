@@ -13,3 +13,6 @@
 3. 聊天窗口
 4. 知识库
 5. Agent 识别的语言或文本 执行命令os
+
+https://github.com/yoyofx/ailive/assets/4504853/07f11c5f-a002-4536-be74-d4e99183025e
+
