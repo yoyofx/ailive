@@ -10,7 +10,7 @@ from fastapi.responses import HTMLResponse
 
 import os
 
-chat = create_llm_openai( apikey='fk224285-rmfTvLRKQyarQdyF5YBX6IlfKVKTj1y0',
+chat = create_llm_openai( apikey='fk224285-rmfTvLRKQyarQdyF5YBX6IlfKVKTj1y1',
                          apibase='https://openai.api2d.net/v1')
 
 embeddings = load_huggingface_embeddings('all-MiniLM-L6-v2')
