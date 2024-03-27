@@ -11,9 +11,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import zhTips from './tips/zh.json'
 import enTips from './tips/en.json'
 import { Dispatch, RootState } from '../../store'
+import  WebSocketComponent from './WebSocket'
 
-
-
+//'ws://localhost:8000/ws'
 interface ITips {
   mouseover: Mouseover[]
   click: Mouseover[]
@@ -48,29 +48,14 @@ const getCavSize = () => {
 }
 
 const Model = () => {
-  const {
-    modelPath: originModelPath,
-    resizable,
-    useGhProxy,
-    language,
-    showTool,
-  } = useSelector((state: RootState) => ({
-    ...state.config,
-    ...state.win,
-  }))
+  const { modelPath: originModelPath, resizable,  useGhProxy, language,showTool } = useSelector((state: RootState) => ({ ...state.config, ...state.win, }))
 
   const modelPath =
-    useGhProxy && originModelPath.startsWith('http')
-      ? `https://mirror.ghproxy.com/${originModelPath}`
-      : originModelPath
+    useGhProxy && originModelPath.startsWith('http') ? `https://mirror.ghproxy.com/${originModelPath}` : originModelPath
 
   const dispatch = useDispatch<Dispatch>()
 
-  const [tips, setTips] = useState<TipsType>({
-    text: '',
-    priority: -1,
-    timeout: 0,
-  })
+  const [tips, setTips] = useState<TipsType>({ text: '', priority: -1,  timeout: 0 })
 
   const [cavSize, setCavSize] =
     useState<{ width: number; height: number }>(getCavSize)
@@ -158,77 +143,47 @@ const Model = () => {
   }
 
   const showMessage = (text: string, timeout: number) => {
-    handleMessageChange({
-      text: text,
-      timeout: timeout,
-      priority: 9999
-    })
+    handleMessageChange({ text: text,timeout: timeout,priority: 9999})
   }
 
   const handleMouseOver: React.MouseEventHandler<HTMLDivElement> = (event) => {
     const tips = tipJSONs.mouseover.find((item) =>
       (event.target as any).matches(item.selector),
     )
-
-    if (!tips) {
-      return
+    if (tips){
+      let text = Array.isArray(tips.text)? tips.text[Math.floor(Math.random() * tips.text.length)]: tips.text
+      text = text.replace('{text}', (event.target as HTMLDivElement).innerText)
+      handleMessageChange({ text, timeout: 2000, priority: 1, })
     }
-
-    let text = Array.isArray(tips.text)
-      ? tips.text[Math.floor(Math.random() * tips.text.length)]
-      : tips.text
-    text = text.replace('{text}', (event.target as HTMLDivElement).innerText)
-    handleMessageChange({
-      text,
-      timeout: 4000,
-      priority: 8,
-    })
   }
 
   const handleClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
     const tips = tipJSONs.click.find((item) =>
       (event.target as any).matches(item.selector),
     )
-
-    if (!tips) {
-      return
+    if (tips){
+      let text = Array.isArray(tips.text)? tips.text[Math.floor(Math.random() * tips.text.length)]: tips.text
+      text = text.replace('{text}', (event.target as HTMLDivElement).innerText)
+      handleMessageChange({ text, timeout: 2000, priority: 1, })
     }
-
-    let text = Array.isArray(tips.text)
-      ? tips.text[Math.floor(Math.random() * tips.text.length)]
-      : tips.text
-    text = text.replace('{text}', (event.target as HTMLDivElement).innerText)
-
-    handleMessageChange({
-      text,
-      timeout: 4000,
-      priority: 8,
-    })
   }
 
   const doubleClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
     let text: string = "hello"
-    handleMessageChange({
-     text,
-      timeout: 4000,
-      priority: 8,
-    })
+    handleMessageChange({ text, timeout: 2000,  priority: 1})
   }
+
+
+
+  const [ws,setWS] = useState<WebSocket>()
+  
 
   const onChat = (text: string) => {
-    ws.send(text)
+    ws?.send(text)
   }
 
-
-  const ws = new WebSocket('ws://localhost:8000/ws');
-
-  ws.onopen =() => {
-    console.log('connected');
-  }
-
-  ws.onmessage = (evt) => {
-    console.log('received: %s', evt.data)
-    showMessage(evt.data, 4000)
+  const onMessage = (text: string) => {
+    showMessage(text, 5000)
   }
 
 
@@ -245,7 +200,8 @@ const Model = () => {
       <RenderWrapper>
         <Render {...cavSize} modelPath={modelPath}></Render>
       </RenderWrapper>
-
+      
+      <WebSocketComponent url='ws://localhost:8000/ws' onMessage={onMessage} setWS={setWS}></WebSocketComponent>
       <Footbar onEnterPress={onChat}></Footbar>
     </Wrapper>
   )
