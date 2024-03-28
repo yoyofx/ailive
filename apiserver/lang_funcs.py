@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
-from langchain.llms import OpenAI
-from langchain.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain.vectorstores import Chroma,FAISS,VectorStore
 from langchain_core.documents import Document
 from langchain.document_loaders import TextLoader,PyMuPDFLoader,DirectoryLoader
