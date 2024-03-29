@@ -1,11 +1,10 @@
 import os
 from pathlib import Path
 from langchain_openai import ChatOpenAI
-from langchain.vectorstores import Chroma,FAISS,VectorStore
+from langchain_community.vectorstores import Chroma,FAISS,VectorStore
 from langchain_core.documents import Document
-from langchain.document_loaders import TextLoader,PyMuPDFLoader,DirectoryLoader
+from langchain_community.document_loaders import TextLoader,PyMuPDFLoader,DirectoryLoader,BiliBiliLoader
 from langchain_community.document_loaders import WebBaseLoader
-from langchain.document_loaders.bilibili import BiliBiliLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter,CharacterTextSplitter
 from langchain.memory import ConversationBufferWindowMemory
 from langchain.chains.question_answering import load_qa_chain
@@ -13,8 +12,8 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.chains.llm import LLMChain
 from langchain.chains.conversational_retrieval.prompts import CONDENSE_QUESTION_PROMPT,QA_PROMPT
 from langchain.schema.language_model import BaseLanguageModel
-from langchain.embeddings import HuggingFaceEmbeddings,SentenceTransformerEmbeddings
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings,SentenceTransformerEmbeddings
+from langchain_community.embeddings.openai import OpenAIEmbeddings
 from langchain.prompts import ( PromptTemplate )
 from langchain.chains.summarize import load_summarize_chain
 from typing import List

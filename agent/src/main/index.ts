@@ -29,6 +29,7 @@ app.commandLine.appendSwitch('disable-background-timer-throttling')
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
 app.commandLine.appendSwitch('enable-features', 'WebSpeechAPI')
 
+
 let win: BrowserWindow | undefined
 let mainWindowState: windowStateKeeper.State
 

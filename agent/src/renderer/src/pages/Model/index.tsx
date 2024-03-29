@@ -176,7 +176,8 @@ const Model = () => {
 
 
   const [ws,setWS] = useState<WebSocket>()
-  
+  const synth = window.speechSynthesis;
+
 
   const onChat = (text: string) => {
     ws?.send(text)
@@ -184,9 +185,42 @@ const Model = () => {
 
   const onMessage = (text: string) => {
     showMessage(text, 5000)
+
+    const voice = synth.getVoices()[0]
+    console.log(voice)
+    const utterThis = new SpeechSynthesisUtterance(text)
+    utterThis.pitch = 1.4
+    utterThis.rate = 0.8
+    utterThis.lang= 'zh-cn'
+    //utterThis.voice = voice
+    synth.speak(utterThis)
   }
 
+  // window.speechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+  // const recognition = new window.speechRecognition()
+  // recognition.interimResults = true;
+  // recognition.maxAlternatives = 10;
+  // recognition.continuous = true;
+  // let finalTranscript = "";
 
+  // recognition.onresult = event => {
+  //   let interimTranscript = "";
+  //   for (
+  //     let i = event.resultIndex, len = event.results.length;
+  //     i < len;
+  //     i++
+  //   ) {
+  //     let transcript = event.results[i][0].transcript;
+  //     if (event.results[i].isFinal) {
+  //       finalTranscript += transcript;
+  //     } else {
+  //       interimTranscript += transcript;
+  //     }
+  //   }
+  
+  //   console.log(finalTranscript + interimTranscript)
+  // };
+  
 
   return (
     <Wrapper
