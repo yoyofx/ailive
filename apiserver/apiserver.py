@@ -15,8 +15,9 @@ from langchain.agents import AgentType,initialize_agent
 from lang_tools import *
 
 from typing import Union
-from fastapi import FastAPI,WebSocket
+from fastapi import FastAPI,WebSocket,Response
 from fastapi.responses import HTMLResponse
+import edge_tts as tts
 
 import os
 
@@ -121,3 +122,9 @@ async def websocket_endpoint(websocket: WebSocket):
         data = await websocket.receive_text()
         result =  conversation.predict(input=data)
         await websocket.send_text(result)
+
+
+@app.get("/text2audio/{text}")
+async def text2audio(text:str):
+    communicate = tts.Communicate(text, 'zh-CN-XiaoyiNeural')
+    return Response(communicate.stream(), media_type="audio/mp3")
