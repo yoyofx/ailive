@@ -15,4 +15,5 @@ unstructured
 fastapi
 websockets
 uvicorn
+pydantic
 #python-magic-bin==0.4.14

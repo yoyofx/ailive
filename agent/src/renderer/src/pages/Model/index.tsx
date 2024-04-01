@@ -12,6 +12,7 @@ import zhTips from './tips/zh.json'
 import enTips from './tips/en.json'
 import { Dispatch, RootState } from '../../store'
 import  WebSocketComponent from './WebSocket'
+import axios from 'axios'
 
 //'ws://localhost:8000/ws'
 interface ITips {
@@ -176,51 +177,31 @@ const Model = () => {
 
 
   const [ws,setWS] = useState<WebSocket>()
-  const synth = window.speechSynthesis;
-
 
   const onChat = (text: string) => {
     ws?.send(text)
   }
 
-  const onMessage = (text: string) => {
-    showMessage(text, 5000)
+  const onMessage = async(text: string) => {
+    showMessage(text, 8000)
+    const res = await axios.post('http://127.0.0.1:8000/text2audio', {
+      text:text
+    },{
+      responseType: 'arraybuffer'
+    })
+    const arrayBuffer = res.data
+    const audioContext = new AudioContext();
+    const audioSource = audioContext.createBufferSource()
 
-    const voice = synth.getVoices()[0]
-    console.log(voice)
-    const utterThis = new SpeechSynthesisUtterance(text)
-    utterThis.pitch = 1.4
-    utterThis.rate = 0.8
-    utterThis.lang= 'zh-cn'
-    //utterThis.voice = voice
-    synth.speak(utterThis)
+    audioContext.decodeAudioData(arrayBuffer, (buffer) => {
+      audioSource.buffer = buffer;
+      audioSource.connect(audioContext.destination)
+      audioSource.start()
+    })
+
+
   }
 
-  // window.speechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
-  // const recognition = new window.speechRecognition()
-  // recognition.interimResults = true;
-  // recognition.maxAlternatives = 10;
-  // recognition.continuous = true;
-  // let finalTranscript = "";
-
-  // recognition.onresult = event => {
-  //   let interimTranscript = "";
-  //   for (
-  //     let i = event.resultIndex, len = event.results.length;
-  //     i < len;
-  //     i++
-  //   ) {
-  //     let transcript = event.results[i][0].transcript;
-  //     if (event.results[i].isFinal) {
-  //       finalTranscript += transcript;
-  //     } else {
-  //       interimTranscript += transcript;
-  //     }
-  //   }
-  
-  //   console.log(finalTranscript + interimTranscript)
-  // };
-  
 
   return (
     <Wrapper

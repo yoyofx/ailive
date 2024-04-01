@@ -15,13 +15,15 @@ from langchain.agents import AgentType,initialize_agent
 from lang_tools import *
 
 from typing import Union
-from fastapi import FastAPI,WebSocket,Response
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI,WebSocket
+from fastapi.responses import HTMLResponse,StreamingResponse,JSONResponse
 import edge_tts as tts
+from pydantic import BaseModel
+import typing
 
 import os
 
-chat = create_llm_openai( apikey='fk224285-rmfTvLRKQyarQdyF5YBX6IlfKVKTj1y0',
+chat = create_llm_openai( apikey='fk224285-rmfTvLRKQyarQdyF5YBX6IlfKVKTj1y1',
                          apibase='https://openai.api2d.net/v1')
 
 promptStr = ''''
@@ -124,7 +126,54 @@ async def websocket_endpoint(websocket: WebSocket):
         await websocket.send_text(result)
 
 
-@app.get("/text2audio/{text}")
-async def text2audio(text:str):
-    communicate = tts.Communicate(text, 'zh-CN-XiaoyiNeural')
-    return Response(communicate.stream(), media_type="audio/mp3")
+class Text2Audio(BaseModel):
+    text: str
+
+def ApiResult(data:Union[list,dict,str] = None, message:str = "Success", success:bool = True):
+    return JSONResponse(
+        status_code=200,
+        content= {
+            "data": data or {}, 
+            "message": message, 
+            "success": success})
+
+
+@app.post("/text2audio/",)
+async def text2audio(request:Text2Audio):
+    communicate = tts.Communicate(request.text, 'zh-CN-XiaoyiNeural')
+    async def audio_generator():
+        async for chunk in communicate.stream():
+            if chunk["type"] == "audio":
+                yield chunk["data"]
+
+    return StreamingResponse(audio_generator(), media_type="audio/mp3")
+
+
+voiceMap = {
+    "xiaoxiao": "zh-CN-XiaoxiaoNeural",
+    "xiaoyi": "zh-CN-XiaoyiNeural",
+    "yunjian": "zh-CN-YunjianNeural",
+    "yunxi": "zh-CN-YunxiNeural",
+    "yunxia": "zh-CN-YunxiaNeural",
+    "yunyang": "zh-CN-YunyangNeural",
+    "xiaobei": "zh-CN-liaoning-XiaobeiNeural",
+    "xiaoni": "zh-CN-shaanxi-XiaoniNeural",
+    "hiugaai": "zh-HK-HiuGaaiNeural",
+    "hiumaan": "zh-HK-HiuMaanNeural",
+    "wanlung": "zh-HK-WanLungNeural",
+    "hsiaochen": "zh-TW-HsiaoChenNeural",
+    "hsioayu": "zh-TW-HsiaoYuNeural",
+    "yunjhe": "zh-TW-YunJheNeural",
+}
+
+@app.get("/voice/{voiceId}")
+def getVoiceById(voiceId:str):
+    return ApiResult(data=voiceMap.get(voiceId))
+
+
+@app.get("/voices")
+def getVoiceList():
+    new_list = [] 
+    for key, val in voiceMap.items(): 
+        new_list.append({ "name": key, "value": val}) 
+    return ApiResult(data=new_list)
