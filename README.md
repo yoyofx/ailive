@@ -21,3 +21,8 @@
 
 ## 设定:
 老婆 =  大模型/ 人物(显示) / 人物设定 / 知识库
+
+
+
+https://github.com/yoyofx/ailive/assets/4504853/8c7ad009-8b7a-4b1e-8ca3-702279a42835
+
