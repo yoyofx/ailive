@@ -16,4 +16,5 @@ fastapi
 websockets
 uvicorn
 pydantic
+py-applescript
 #python-magic-bin==0.4.14

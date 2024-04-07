@@ -1,17 +1,6 @@
-from lang_funcs import (load_docs_by_extension,split_docs,
-        create_vectorstore_faiss,create_vectorstore,
-        load_openai_embeddings,load_huggingface_embeddings,
-        create_knowledge_chain,create_summarize_chain,create_llm_openai
-)
-from langchain_core.utils.function_calling import convert_to_openai_function
-
-from langchain.prompts import (ChatPromptTemplate,PromptTemplate,SystemMessagePromptTemplate,
-                               AIMessagePromptTemplate,HumanMessagePromptTemplate,MessagesPlaceholder)
-from langchain.memory import ConversationBufferMemory
-from langchain.chains import ConversationChain
-from langchain.agents import tool
-from langchain.agents import load_tools
-from langchain.agents import AgentType,initialize_agent
+from langchain.agents import ConversationalChatAgent, AgentExecutor
+from langchain.schema.language_model import BaseLanguageModel
+from lang_funcs import ( create_llm_openai,create_llm_agent,read_toml )
 from lang_tools import *
 
 from typing import Union
@@ -19,12 +8,14 @@ from fastapi import FastAPI,WebSocket
 from fastapi.responses import HTMLResponse,StreamingResponse,JSONResponse
 import edge_tts as tts
 from pydantic import BaseModel
-import typing
+import tomllib
 
-import os
 
-chat = create_llm_openai( apikey='fk224285-rmfTvLRKQyarQdyF5YBX6IlfKVKTj1y1',
-                         apibase='https://openai.api2d.net/v1')
+
+config = read_toml("./config.toml")
+
+chat = create_llm_openai( apikey=config["openai"]["api_key"],
+                         apibase=config["openai"]["url"])
 
 promptStr = ''''
 你是人工智能程序，你的姓名叫：晓冬 
@@ -52,22 +43,20 @@ promptStr = ''''
 生活态度：
 晓冬对生活充满热情和期待，保持着一颗童心，对世界充满好奇和探索欲。她相信每个人的努力ß都会有回报，因此总是积极向上地面对生活中的挑战和困难。她的生活态度也影响着身边的人，让大家感受到生活的美好和快乐。
 '''
-functions = [
-    convert_to_openai_function(f) for f in [
-        note, weather,time
-    ]
-]
 
-chat = chat.bind(functions=functions)
+config = read_toml("./config.toml")
 
-prompt = ChatPromptTemplate.from_messages([
-    SystemMessagePromptTemplate.from_template(promptStr),
-    MessagesPlaceholder(variable_name="history"),
-    HumanMessagePromptTemplate.from_template("{input}")
-])
+chat = create_llm_openai( apikey=config["openai"]["api_key"],
+                         apibase=config["openai"]["url"])
 
-memory = ConversationBufferMemory(return_messages=True)
-conversation = ConversationChain(memory=memory, prompt=prompt, llm=chat)
+tools = ["time","weather","note","music"]
+llm_tools = []
+for tool in tools:
+    llm_tools.append(globals()[tool])
+
+print(llm_tools)
+
+agent_executor = create_llm_agent(chat,promptStr,llm_tools)
 
 app = FastAPI()
 
@@ -122,8 +111,8 @@ async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
         data = await websocket.receive_text()
-        result =  conversation.predict(input=data)
-        await websocket.send_text(result)
+        result = agent_executor.invoke({"input": data })
+        await websocket.send_text(result["output"])
 
 
 class Text2Audio(BaseModel):

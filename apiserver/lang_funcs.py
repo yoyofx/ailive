@@ -16,8 +16,20 @@ from langchain_community.embeddings import HuggingFaceEmbeddings,SentenceTransfo
 from langchain_community.embeddings.openai import OpenAIEmbeddings
 from langchain.prompts import ( PromptTemplate )
 from langchain.chains.summarize import load_summarize_chain
+from langchain.prompts import (ChatPromptTemplate,PromptTemplate,SystemMessagePromptTemplate,
+                               AIMessagePromptTemplate,HumanMessagePromptTemplate,MessagesPlaceholder)
+from langchain.memory.buffer import ConversationBufferMemory
+from langchain.agents.format_scratchpad.openai_tools import (
+    format_to_openai_tool_messages,)
+from langchain.agents.output_parsers.openai_tools import OpenAIToolsAgentOutputParser
+from langchain.agents import AgentExecutor
 from typing import List
+import tomllib
 
+
+def read_toml(path):
+    with open(path, "rb") as f:
+        return tomllib.load(f)
 
 def create_llm_openai(apikey:str="" ,apibase:str="",proxy:str="") -> BaseLanguageModel:
     '''
@@ -33,6 +45,66 @@ def create_llm_openai(apikey:str="" ,apibase:str="",proxy:str="") -> BaseLanguag
     os.environ['OPENAI_API_KEY'] = apikey
     llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo", max_tokens=1500)
     return llm
+
+def create_llm_agent(llm:BaseLanguageModel,prompt:str,tools:List) -> AgentExecutor: 
+    memory = ConversationBufferMemory(memory_key='chat_history',
+        k=10,return_messages=True)
+
+    # tools = [note, globals()["weather"],time]
+
+    llm_with_tools = llm.bind_tools(tools)
+
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            ( "system", prompt ),
+            MessagesPlaceholder(variable_name="chat_history"),
+            ("user", "{input}"),
+            MessagesPlaceholder(variable_name="agent_scratchpad"),
+        ]
+    )
+    agent = (
+        {
+            "input": lambda x: x["input"],
+            "agent_scratchpad": lambda x: format_to_openai_tool_messages(
+                x["intermediate_steps"]
+            ),
+            "chat_history": lambda x: x["chat_history"],
+        }
+        | prompt
+        | llm_with_tools
+        | OpenAIToolsAgentOutputParser()
+    )
+    agent_executor = AgentExecutor(agent=agent, tools=tools,memory=memory, verbose=True,max_execution_time=120)
+    return agent_executor
+
+def create_knowledge_chain(llm:BaseLanguageModel,vectorstoreRetriever=None):
+    '''
+    基于向量存储创建知识库类型的chain, 使用方法如下:
+    result =  Q({"question":"请详细讲一下这个文档主要内容是什么?"})
+    print(result["answer"].strip())
+    '''
+    memory = ConversationBufferWindowMemory( memory_key="chat_history", k=20 ,return_messages=True)
+    question_generator = LLMChain(llm=llm,prompt=CONDENSE_QUESTION_PROMPT)
+    chain = load_qa_chain(llm, chain_type="stuff",prompt=QA_PROMPT)
+    QA = ConversationalRetrievalChain(retriever=vectorstoreRetriever,combine_docs_chain=chain,question_generator=question_generator,memory=memory)
+    return QA
+
+
+def create_summarize_chain(llm:BaseLanguageModel):
+    '''
+    创建文档总结类型的chain, 使用方法如下:
+    summ = chain({"input_documents": documents}, return_only_outputs=True)
+    print(summ['output_text'])
+    '''
+    prompt_template = """对下面的文字,请翻译成中文:
+
+    {text}
+
+    """
+    PROMPT = PromptTemplate(template=prompt_template, input_variables=["text"])
+    summarizeChain = load_summarize_chain(llm, chain_type="map_reduce",return_intermediate_steps=False,combine_prompt=PROMPT)
+    return summarizeChain
+
 
 #!pip install bilibili-api
 # brew install libmagic
@@ -97,34 +169,6 @@ def load_vectorstore(store, name:str,embedding_model ,storing_path="./knowledge/
     USERGUIDE_INDEX = storing_path + name
     return store.load_local(USERGUIDE_INDEX,embedding_model)
 
-
-def create_knowledge_chain(llm:BaseLanguageModel,vectorstoreRetriever=None):
-    '''
-    基于向量存储创建知识库类型的chain, 使用方法如下:
-    result =  Q({"question":"请详细讲一下这个文档主要内容是什么?"})
-    print(result["answer"].strip())
-    '''
-    memory = ConversationBufferWindowMemory( memory_key="chat_history", k=20 ,return_messages=True)
-    question_generator = LLMChain(llm=llm,prompt=CONDENSE_QUESTION_PROMPT)
-    chain = load_qa_chain(llm, chain_type="stuff",prompt=QA_PROMPT)
-    QA = ConversationalRetrievalChain(retriever=vectorstoreRetriever,combine_docs_chain=chain,question_generator=question_generator,memory=memory)
-    return QA
-
-
-def create_summarize_chain(llm:BaseLanguageModel):
-    '''
-    创建文档总结类型的chain, 使用方法如下:
-    summ = chain({"input_documents": documents}, return_only_outputs=True)
-    print(summ['output_text'])
-    '''
-    prompt_template = """对下面的文字,请翻译成中文:
-
-    {text}
-
-    """
-    PROMPT = PromptTemplate(template=prompt_template, input_variables=["text"])
-    summarizeChain = load_summarize_chain(llm, chain_type="map_reduce",return_intermediate_steps=False,combine_prompt=PROMPT)
-    return summarizeChain
 
 def load_openai_embeddings():
     return OpenAIEmbeddings()
