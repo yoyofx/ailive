@@ -74,7 +74,7 @@ def create_llm_agent(llm:BaseLanguageModel,prompt:str,tools:List) -> AgentExecut
         | llm_with_tools
         | OpenAIToolsAgentOutputParser()
     )
-    agent_executor = AgentExecutor(agent=agent, tools=tools,memory=memory, verbose=True,max_execution_time=120)
+    agent_executor = AgentExecutor(agent=agent, tools=tools,memory=memory, verbose=True)
     return agent_executor
 
 def create_knowledge_chain(llm:BaseLanguageModel,vectorstoreRetriever=None):
