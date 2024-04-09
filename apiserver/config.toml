@@ -1,6 +1,6 @@
 [openai]
 url = "https://api.aiproxy.io/v1"
-api_key = "h3EF8M0ETOmhQ1AI0OQXmUfb0trU9tr"
+api_key = "lXD9PbvalIcBxZf3Oh3EF8M0ETOmhQ1AI0OQXmUfb0trU9tr"
 model = "gpt-3.5-turbo"
 max_tokens = 1000
 #url = "http://localhost:8892/v1"
