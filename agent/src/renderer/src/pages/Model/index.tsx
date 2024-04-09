@@ -182,6 +182,8 @@ const Model = () => {
     ws?.send(text)
   }
 
+  const audioContext = new AudioContext();
+
   const onMessage = async(text: string) => {
     showMessage(text, 8000)
     const res = await axios.post('http://127.0.0.1:8000/text2audio', {
@@ -189,15 +191,20 @@ const Model = () => {
     },{
       responseType: 'arraybuffer'
     })
+
+
     const arrayBuffer = res.data
-    const audioContext = new AudioContext();
     const audioSource = audioContext.createBufferSource()
 
     audioContext.decodeAudioData(arrayBuffer, (buffer) => {
       audioSource.buffer = buffer;
       audioSource.connect(audioContext.destination)
       audioSource.start()
+      audioSource.addEventListener('ended', () => {
+        setTips(null)
+      })
     })
+
 
 
   }

@@ -25,15 +25,16 @@ from langchain.agents.output_parsers.openai_tools import OpenAIToolsAgentOutputP
 from langchain.agents import AgentExecutor
 from typing import List
 import tomllib
+from typing import ( Optional)
 
 
 def read_toml(path):
     with open(path, "rb") as f:
         return tomllib.load(f)
 
-def create_llm_openai(apikey:str="" ,apibase:str="",proxy:str="") -> BaseLanguageModel:
+def create_llm_openai(apikey:str="" ,apibase:str="",model:str="", max_tokens: Optional[int] = 1000,proxy:str="") -> BaseLanguageModel:
     '''
-    Create OpenAI LLM
+    Create OpenAI LLM (gpt-4-0613 / gpt-3.5-turbo)
     proxy="127.0.0.1:7890"
     '''
     if proxy != "" :
@@ -43,7 +44,10 @@ def create_llm_openai(apikey:str="" ,apibase:str="",proxy:str="") -> BaseLanguag
     os.environ['NLTK_DATA'] = os.path.join(os.path.abspath('.'), "nltk_data")
     os.environ['OPENAI_API_BASE'] =  apibase
     os.environ['OPENAI_API_KEY'] = apikey
-    llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo", max_tokens=1500)
+    defaultModelName = 'gpt-3.5-turbo'
+    if model != "":
+        defaultModelName = model
+    llm = ChatOpenAI(temperature=0, model_name = defaultModelName, max_tokens=max_tokens)
     return llm
 
 def create_llm_agent(llm:BaseLanguageModel,prompt:str,tools:List) -> AgentExecutor: 
@@ -188,3 +192,15 @@ def load_huggingface_embeddings(model_path, normalize_embedding=True):
             'normalize_embeddings': normalize_embedding # keep True to compute cosine similarity
         }
     )
+
+
+models = {
+    "openai": ['gpt-4-0613', 'gpt-3.5-turbo'],
+}
+
+def getModels():
+    return models
+
+# 渠道模型
+def getModelByChannel(name:str):
+    return models[name]
