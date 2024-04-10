@@ -55,9 +55,11 @@ def create_llm_agent(llm:BaseLanguageModel,prompt:str,tools:List) -> AgentExecut
         k=10,return_messages=True)
 
     # tools = [note, globals()["weather"],time]
-
-    llm_with_tools = llm.bind_tools(tools)
-
+    if type(llm).__name__ == 'ChatOpenAI':
+        llm_with_tools = llm.bind_tools(tools)
+    else:
+        llm_with_tools = llm.bind(functions=tools)
+        
     prompt = ChatPromptTemplate.from_messages(
         [
             ( "system", prompt ),
