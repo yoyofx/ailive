@@ -3,13 +3,13 @@ api_key = "lXD9PbvalIcBxZf3Oh3EF8M0ETOmhQ1AI0OQXmUfb0trU9tr"
 max_tokens = 1000
 
 # aiproxy.io
-#url = "https://api.aiproxy.io/v1"
-#model = "gpt-3.5-turbo"
+url = "https://api.aiproxy.io/v1"
+model = "gpt-3.5-turbo"
 #model = "gpt-4-0613"
 
 # ollama
-url = "http://localhost:11434/v1"
-model = "mistral"
+#url = "http://localhost:11434/v1"
+#model = "mistral"
 
 # free gpt3.5
 #url = "http://localhost:8892/v1"
@@ -17,7 +17,7 @@ model = "mistral"
 
 [character]
 voice = "zh-CN-XiaoyiNeural"
-tools = ["time","weather","note","play_music","pause_music","hot_search"]
+tools = ["time","weather","note","play_music","pause_music","hot_search","weibo_hot_search"]
 
 description = '''
 你是人工智能程序，你的姓名叫：晓冬 

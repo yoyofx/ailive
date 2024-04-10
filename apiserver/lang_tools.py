@@ -104,7 +104,7 @@ def pause_music() -> str:
 
 @tool 
 def hot_search() -> str:
-    """查看/搜索/最新的 热搜，新闻,新鲜事 此函数将返回中文, 只返回标题，不返回内容,精简结果
+    """查看/搜索/最新的 百度，新闻, 此函数将返回中文, 只返回标题，不返回内容,精简结果
     """
     urllib = 'https://top.baidu.com/board?tab=realtime'
 
@@ -123,9 +123,42 @@ def hot_search() -> str:
     index = 0
     lines = []
     for num,title,detail,hotSearch in html_lists:
-        if index < 20:
+        if index < 50:
             lines.append(f"序号:{num},标题:{title},内容:{detail},热度:{hotSearch}")
             index = index +1
+    message = "\n".join(lines)
+    return message
+
+@tool
+def weibo_hot_search() -> str:
+    """查看/搜索/最新的 新浪微博，热搜，新鲜事，此函数将返回中文
+    """
+    # 获取json文件
+    def hot_search():
+        url = 'https://weibo.com/ajax/side/hotSearch'
+        response = requests.get(url)
+        if response.status_code != 200:
+            return None
+        return response.json()['data']
+
+    num = 20
+    data = hot_search()
+    if not data:
+        print('获取微博热搜榜失败')
+        
+    # 获取热搜榜
+    lines = [f"置顶:{data['hotgov']['word'].strip('#')}"]
+    for i, rs in enumerate(data['realtime'][:num], 1):
+        title = rs['word']
+        try:
+            label = rs['label_name']
+            if label in ['新','爆','沸']:
+                label = label
+            else:
+                label = ''
+        except:
+            label = ''
+        lines.append(f"{i}. {title} {label}")
     message = "\n".join(lines)
     return message
 
