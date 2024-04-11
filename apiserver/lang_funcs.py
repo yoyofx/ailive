@@ -47,12 +47,12 @@ def create_llm_openai(apikey:str="" ,apibase:str="",model:str="", max_tokens: Op
     defaultModelName = 'gpt-3.5-turbo'
     if model != "":
         defaultModelName = model
-    llm = ChatOpenAI(temperature=0, model_name = defaultModelName, max_tokens=max_tokens)
+    llm = ChatOpenAI(temperature=0.95 , model_name = defaultModelName, max_tokens=max_tokens,)
     return llm
 
 def create_llm_agent(llm:BaseLanguageModel,prompt:str,tools:List) -> AgentExecutor: 
     memory = ConversationBufferMemory(memory_key='chat_history',
-        k=10,return_messages=True)
+        k=3,return_messages=True)
 
     # tools = [note, globals()["weather"],time]
     if type(llm).__name__ == 'ChatOpenAI':

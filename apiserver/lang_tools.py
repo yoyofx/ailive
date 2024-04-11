@@ -104,7 +104,7 @@ def pause_music() -> str:
 
 @tool 
 def hot_search() -> str:
-    """查看/搜索/最新的 百度，新闻, 此函数将返回中文, 只返回标题，不返回内容,精简结果
+    """查看/搜索/最新的 百度，新闻, 此函数将返回中文
     """
     urllib = 'https://top.baidu.com/board?tab=realtime'
 
@@ -118,14 +118,13 @@ def hot_search() -> str:
     titles = re.findall('<div class="c-single-text-ellipsis">(.*?)</div> ',res.text,re.S)
     details = re.findall('<div class="hot-desc_1m_jR large_nSuFU ">(.*?)<a',res.text,re.S)
     hotSearchs = re.findall('<div class="hot-index_1Bl1a"> (\d+) </div>',res.text,re.S)
-
-    html_lists = zip(nums,titles,details,hotSearchs)
-    index = 0
+    num = 15
+    html_lists = zip(nums,titles,details,hotSearchs[:num])
+    
     lines = []
     for num,title,detail,hotSearch in html_lists:
-        if index < 50:
-            lines.append(f"序号:{num},标题:{title},内容:{detail},热度:{hotSearch}")
-            index = index +1
+            lines.append(f"{num}. {title}")
+
     message = "\n".join(lines)
     return message
 
