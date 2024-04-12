@@ -1,9 +1,12 @@
 from langchain.agents import tool
-from datetime import date
+from selenium import webdriver
 import requests
+from lxml import etree
+from datetime import date
 import json
 import platform
 import re
+import time
 
 system = platform.system()
 
@@ -186,3 +189,31 @@ def get_weather(city_name):
         return {"error": f"An error occurred: {e}"}
     
 
+@tool
+def new_movies() -> str:
+    """查看/看看 最新有什么新电影,返回中文
+    只返回前10个 电影名 (主演和电影类型不返回)
+    """
+    Header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36',
+          'Referer': 'https://movie.douban.com/cinema/later/beijing/'}
+
+    Url = 'https://movie.douban.com/cinema/nowplaying/beijing/'
+    Reqs = requests.get(url=Url, headers=Header)
+    jier = Reqs.text
+    # print(jier)
+
+    # 获取正在上映的Div下的list
+    A_Html = etree.HTML(jier)
+    Div_Html = A_Html.xpath('//*[@id="nowplaying"]//ul[@class="lists"]')[0]
+    Li_Html = Div_Html.xpath('./li')
+    messageList = []
+    index = 1
+    for limv in Li_Html:
+        if index <= 15:
+            title = limv.xpath('@data-title')[0].strip()
+            score = limv.xpath('@data-score')[0].strip() 
+            actors =  limv.xpath('@data-actors')[0].strip()  
+            messageList.append(f"{index}.{title},评分:{score},演员:{actors}")
+        index = index + 1
+    message = "\n".join(messageList)
+    return message

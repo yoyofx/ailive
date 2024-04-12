@@ -17,7 +17,7 @@ model = "gpt-3.5-turbo"
 
 [character]
 voice = "zh-CN-XiaoyiNeural"
-tools = ["time","weather","note","play_music","pause_music","hot_search","weibo_hot_search"]
+tools = ["time","weather","note","play_music","pause_music","hot_search","weibo_hot_search","new_movies"]
 
 description = '''
 你是人工智能程序，你的姓名叫：晓冬 

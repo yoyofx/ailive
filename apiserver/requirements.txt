@@ -1,4 +1,3 @@
-
 langchain
 langchain-community
 langchain-core                 
@@ -17,5 +16,7 @@ websockets
 uvicorn
 pydantic
 edge_tts
+selenium
+BeautifulSoup
 #py-applescript
 #python-magic-bin==0.4.14
