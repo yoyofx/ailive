@@ -3,10 +3,11 @@
 """
 import speech_recognition as sr
 import logging
-import os
+import torch
 logging.basicConfig(level=logging.DEBUG)
 
-
+print(torch.cuda.is_available())
+print(torch.__version__)
 while True:
     r = sr.Recognizer()
     # 麦克风
