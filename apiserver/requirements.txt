@@ -18,5 +18,9 @@ pydantic
 edge_tts
 selenium
 BeautifulSoup
+SpeechRecognition
+soundfile
+openai-whisper
+# pyaudio
 #py-applescript
 #python-magic-bin==0.4.14

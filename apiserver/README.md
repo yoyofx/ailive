@@ -16,6 +16,17 @@ uvicorn apiserver:app --reload
 ```
 
 
+# pyaudio on mac(M1)
+```sh
+arch -arm64 brew install portaudio
+
+arch -arm64 pip install --no-cache-dir --global-option='build_ext' --global-option='-I/opt/homebrew/include' --global-option='-L/opt/homebrew/lib' pyaudio==0.2.11
+```
+
+
+
+
+
 
 # python-libmagic -> libmagic
 不同操作系统需要安装不同的依赖库
