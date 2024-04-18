@@ -9,6 +9,9 @@ import './initConfig'
 import initTray from './tray'
 import { createWindow, winPagePathMap } from './window'
 
+const foo = "https://www.baidu.com";
+
+
 remoteMain.initialize()
 
 const isWin7 = os.release().startsWith('6.1')
