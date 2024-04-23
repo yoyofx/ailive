@@ -21,6 +21,7 @@ BeautifulSoup
 SpeechRecognition
 soundfile
 openai-whisper
+qwen-agent
 # pyaudio
 #py-applescript
 #python-magic-bin==0.4.14

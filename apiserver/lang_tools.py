@@ -106,7 +106,7 @@ def pause_music() -> str:
 
 
 @tool 
-def hot_search() -> str:
+def baidu_hot_search() -> str:
     """查看/搜索/最新的 百度，新闻, 此函数将返回中文
     """
     urllib = 'https://top.baidu.com/board?tab=realtime'
@@ -190,7 +190,7 @@ def get_weather(city_name):
     
 
 @tool
-def new_movies() -> str:
+def douban_movies() -> str:
     """查看/看看 最新有什么新电影,返回中文
     只返回前10个 电影名 (主演和电影类型不返回)
     """
