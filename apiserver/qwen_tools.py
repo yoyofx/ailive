@@ -33,19 +33,19 @@ class WhatTime(BaseTool):
     
 @register_tool('baidu_hot_search')
 class BaiduHotsearch(BaseTool):
-    description = '详细 查看/搜索/top10列表/最新的 百度，新闻'
+    description = '详细回答有关新闻的相关问题并返回全部列表 最新的 / 百度 / 新闻 / news'
     def call(self, params: Union[str, dict,None], **kwargs) -> str:     
         return baidu_hot_search()
     
 @register_tool('weibo_hot_search')
 class WeiboHotSearch(BaseTool):
-    description = '详细 查看/搜索/top10列表/最新的 新浪微博，热搜，新鲜事'
+    description = '详细回答热搜相关问题并返回全部列表 , 最新的 / 新浪 / 微博 / 热搜 / 新鲜事'
     def call(self, params: Union[str, dict,None], **kwargs) -> str:     
         return weibo_hot_search()
     
 
 @register_tool('douban_movies')
 class WeiboHotSearch(BaseTool):
-    description = '显示 全部列表/查看/看看 最新有什么新电影 / 豆瓣电影'
+    description = '最新 新电影 / 正在上映 / 电影 '
     def call(self, params: Union[str, dict,None], **kwargs) -> str:     
         return douban_movies()
