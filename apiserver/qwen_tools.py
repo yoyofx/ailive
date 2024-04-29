@@ -5,6 +5,7 @@ import json5
 from datetime import datetime
 from functions.news import *
 from functions.weater import *
+from functions.system import *
 
 @register_tool('weather')
 class GetWeather(BaseTool):
@@ -17,6 +18,9 @@ class GetWeather(BaseTool):
     }]
 
     def call(self, params: Union[str, dict], **kwargs) -> str:
+        print(params)
+        params = params.replace("{{","{")
+        params = params.replace("}}","}")
         params = self._verify_json_format_args(params)
         city = params['city']        
         city = urllib.parse.quote(city)
@@ -24,12 +28,16 @@ class GetWeather(BaseTool):
     
 @register_tool('time')
 class WhatTime(BaseTool):
-    description = '当前时间/现在几点,几分/ 今天几号.返回格式为年/月/日 时:分:秒'
+    description = '返回今天的日期'
 
     def call(self, params: str, **kwargs) -> str:     
-        current_time = datetime.now()
-        formatted_time = current_time.strftime("%Y/%m/%d %H:%M:%S")   
-        return formatted_time
+        return today()
+    
+@register_tool('tomorrow')
+class Tomorrow(BaseTool):
+    description = '返回明天的日期'
+    def call(self, params: str, **kwargs) -> str:     
+        return tomorrow()
     
 @register_tool('baidu_hot_search')
 class BaiduHotsearch(BaseTool):

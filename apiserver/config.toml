@@ -21,7 +21,7 @@ model = "qwen:7b-chat"
 
 [character]
 voice = "zh-CN-XiaoyiNeural"
-tools = ["time","weather","baidu_hot_search","weibo_hot_search","douban_movies"]
+tools = ["time","tomorrow","weather","baidu_hot_search","weibo_hot_search","douban_movies"]
 
 # ["note","play_music","pause_music"]
 description = '''

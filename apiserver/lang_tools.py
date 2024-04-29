@@ -25,6 +25,12 @@ def time(text: str) -> str:
 
     return str(date.today())
 
+@tool 
+def tomorrow() -> str:
+    """Tomorrow 返回明天的日期，此函数将返回中文
+    """
+    return str(date.today() + 1)
+
 @tool
 def weather(city: str) -> str:
     """Weather 返回今天输入城市的天气情况,必须与天气相关城市才有意义,城市名要以市结尾,如北京市，上海市，广州市等,此函数将返回中文
