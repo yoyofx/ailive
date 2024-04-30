@@ -8,6 +8,10 @@ import platform
 import re
 import time
 
+from functions.api import google_search
+from functions.system import tomorrow as tomorrowV1
+
+
 system = platform.system()
 
 if system == "Darwin":
@@ -29,7 +33,7 @@ def time(text: str) -> str:
 def tomorrow() -> str:
     """Tomorrow 返回明天的日期，此函数将返回中文
     """
-    return str(date.today() + 1)
+    return tomorrowV1()
 
 @tool
 def weather(city: str) -> str:
@@ -223,3 +227,11 @@ def douban_movies() -> str:
         index = index + 1
     message = "\n".join(messageList)
     return message
+
+@tool
+def search(query:str) -> str:
+    """useful for when you need to ask with search
+    Args:
+    query: string 要搜索的问题
+    """
+    return google_search(query)

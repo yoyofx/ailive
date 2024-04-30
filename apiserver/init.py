@@ -2,10 +2,13 @@ from langchain.agents import AgentExecutor
 from lang_funcs import ( create_llm_openai,create_llm_agent,read_toml  )
 from lang_tools import *
 from qwen_chat_agent import QwenChatAgent
+from functions.api import init_google_search
 
 # 初始化函数
 def initialization(configName:str) -> any:
     config = read_toml(configName)
+    init_google_search(config["serper"]["apikey"])
+
     print("Create LLM ......")
     print("LLM API: " + config["openai"]["url"])
     print("LLM Model: " + config["openai"]["model"])

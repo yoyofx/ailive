@@ -1,4 +1,5 @@
 from typing import Any, Dict, List, Optional, Type, Union, cast
+import datetime
 from qwen_agent.agents import Assistant,ReActChat
 from qwen_tools import *
 
@@ -24,7 +25,7 @@ class QwenChatAgent():
         print(self.agent)
         
     def invoke(self,input: Dict[str, Any]):
-        current_time = datetime.now()
+        current_time = datetime.datetime.now()
         print(self.chat_messages)
 
         question = input["input"]

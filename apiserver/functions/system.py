@@ -1,5 +1,6 @@
 import platform
 from datetime import date
+import datetime
 
 system = platform.system()
 
@@ -18,4 +19,7 @@ def tomorrow() -> str:
     """返回明天的日期
     
     """
-    return str(date.today() + 1)
+    today = datetime.date.today()
+    tomorrow = today + datetime.timedelta(days=1)
+
+    return str(tomorrow)

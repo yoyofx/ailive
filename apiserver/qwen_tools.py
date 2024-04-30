@@ -6,6 +6,7 @@ from datetime import datetime
 from functions.news import *
 from functions.weater import *
 from functions.system import *
+from functions.api import *
 
 @register_tool('weather')
 class GetWeather(BaseTool):
@@ -57,3 +58,15 @@ class WeiboHotSearch(BaseTool):
     description = '最新 新电影 / 正在上映 / 电影 '
     def call(self, params: Union[str, dict,None], **kwargs) -> str:     
         return douban_movies()
+
+@register_tool
+class GoogleSerper(BaseTool):
+    description = '当使用搜索进行询问时，使用此工具'
+    parameters = [{
+        'name': 'query',
+        'type': 'string',
+        'description': '要搜索的问题',
+        'required': True
+    }]
+    def call(self, params: Union[str, dict,None], **kwargs) -> str:     
+        return google_search(params)

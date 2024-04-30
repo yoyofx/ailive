@@ -2,6 +2,9 @@
 mode = "qwen"
 #mode = "langchain"
 
+[serper]
+apikey = "90c3e3f68c6df9f5e628865491443d3545fbaaf8"
+
 [openai]
 api_key = "lXD9PbvalIcBxZf3Oh3EF8M0ETOmhQ1AI0OQXmUfb0trU9tr"
 max_tokens = 1000
