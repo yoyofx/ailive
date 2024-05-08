@@ -22,8 +22,8 @@ def weather(city: str) -> str:
     if "error" in weather_data:
         print(weather_data["error"])
     else:
-        showMessage = "温度:{temperature}°C, 描述:{description},湿度:{humidity}%,风速:{wind_speed} m/s".format(
-            temperature= weather_data["temperature"], description=weather_data["description"],
+        showMessage = "当前温度:{temperature}°C, 最高温度:{temp_max}°C, 最低温度:{temp_min}°C ,描述:{description},湿度:{humidity}%,风速:{wind_speed} m/s".format(
+            temperature= weather_data["temperature"], temp_max=weather_data["temp_max"], temp_min=weather_data["temp_min"], description=weather_data["description"],
             humidity=weather_data["humidity"], wind_speed=weather_data["wind_speed"]
         )
 
@@ -43,6 +43,8 @@ def get_weather(city_name):
             weather_info = {
                 "city": data["name"],
                 "temperature": data["main"]["temp"],
+                "temp_min": data["main"]["temp_min"],
+                "temp_max": data["main"]["temp_max"],
                 "description": data["weather"][0]["description"],
                 "humidity": data["main"]["humidity"],
                 "wind_speed": data["wind"]["speed"]

@@ -182,7 +182,9 @@ const Model = () => {
     ws?.send(text)
   }
 
-  const audioContext = new AudioContext();
+  const [audioContext,setAudioContext] = useState<AudioContext>(new AudioContext())
+
+  // const audioContext = new AudioContext();
 
   const onMessage = async(text: string) => {
     showMessage(text, 8000)
@@ -191,19 +193,23 @@ const Model = () => {
     },{
       responseType: 'arraybuffer'
     })
-
+    //"closed" | "running" | "suspended";
 
     const arrayBuffer = res.data
     const audioSource = audioContext.createBufferSource()
-
     audioContext.decodeAudioData(arrayBuffer, (buffer) => {
       audioSource.buffer = buffer;
       audioSource.connect(audioContext.destination)
       audioSource.start()
-      audioSource.addEventListener('ended', () => {
-        setTips(null)
-      })
     })
+
+    audioContext.onstatechange = (e) => {
+      if (e.target.state === "suspended") {
+        setTips(null)
+        console.log(e)
+      }
+      
+    }
 
 
 

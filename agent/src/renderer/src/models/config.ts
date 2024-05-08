@@ -21,11 +21,13 @@ export const config = createModel<RootModel>()({
     },
     nextModel(state) {
       const { modelList, modelPath } = state
+      console.log(modelList.length)
       let idx = modelList.findIndex((f) => modelPath === f)
       if (idx > -1) {
         if (++idx >= modelList.length) {
           idx = 0
         }
+        console.log(idx)
         return { ...state, modelPath: modelList[idx] }
       }
       return state

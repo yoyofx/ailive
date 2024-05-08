@@ -10,8 +10,8 @@ import time
 
 from functions.api import google_search
 from functions.system import tomorrow as tomorrowV1
-
-
+from functions.weater import weather as weatherV1
+from functions.news import baidu_hot_search as baidu_hot_searchV1, weibo_hot_search as weibo_hot_searchV1, douban_movies as douban_moviesV1
 system = platform.system()
 
 if system == "Darwin":
@@ -42,18 +42,9 @@ def weather(city: str) -> str:
     Args:
         city: string 天气所在的城市,如北京市，上海市，广州市等
     """
-    weather_data = get_weather(city)
-    showMessage = ""
-    if "error" in weather_data:
-        print(weather_data["error"])
-    else:
-        showMessage = "温度:{temperature}°C, 描述:{description},湿度:{humidity}%,风速:{wind_speed} m/s".format(
-            temperature= weather_data["temperature"], description=weather_data["description"],
-            humidity=weather_data["humidity"], wind_speed=weather_data["wind_speed"]
-        )
-
-    print(showMessage)
-    return showMessage
+    weather_data = weatherV1(city)
+    print(weather_data)
+    return weather_data
 
 
 @tool
@@ -119,84 +110,63 @@ def pause_music() -> str:
 def baidu_hot_search() -> str:
     """查看/搜索/最新的 百度，新闻, 此函数将返回中文
     """
-    urllib = 'https://top.baidu.com/board?tab=realtime'
+    # urllib = 'https://top.baidu.com/board?tab=realtime'
 
-    headers = {
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36'
-        }
+    # headers = {
+    #         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36'
+    #     }
 
-    res = requests.get(urllib,headers=headers)
+    # res = requests.get(urllib,headers=headers)
 
-    nums = re.findall('<div class="index_1Ew5p c-index-bg.*?">  (\d+) </div>',res.text,re.S)
-    titles = re.findall('<div class="c-single-text-ellipsis">(.*?)</div> ',res.text,re.S)
-    details = re.findall('<div class="hot-desc_1m_jR large_nSuFU ">(.*?)<a',res.text,re.S)
-    hotSearchs = re.findall('<div class="hot-index_1Bl1a"> (\d+) </div>',res.text,re.S)
-    num = 15
-    html_lists = zip(nums,titles,details,hotSearchs[:num])
+    # nums = re.findall('<div class="index_1Ew5p c-index-bg.*?">  (\d+) </div>',res.text,re.S)
+    # titles = re.findall('<div class="c-single-text-ellipsis">(.*?)</div> ',res.text,re.S)
+    # details = re.findall('<div class="hot-desc_1m_jR large_nSuFU ">(.*?)<a',res.text,re.S)
+    # hotSearchs = re.findall('<div class="hot-index_1Bl1a"> (\d+) </div>',res.text,re.S)
+    # num = 15
+    # html_lists = zip(nums,titles,details,hotSearchs[:num])
     
-    lines = []
-    for num,title,detail,hotSearch in html_lists:
-            lines.append(f"{num}. {title}")
+    # lines = []
+    # for num,title,detail,hotSearch in html_lists:
+    #         lines.append(f"{num}. {title}")
 
-    message = "\n".join(lines)
-    return message
+    # message = "\n".join(lines)
+    
+    return baidu_hot_searchV1()
 
 @tool
 def weibo_hot_search() -> str:
     """查看/搜索/最新的 新浪微博，热搜，新鲜事，此函数将返回中文
     """
     # 获取json文件
-    def hot_search():
-        url = 'https://weibo.com/ajax/side/hotSearch'
-        response = requests.get(url)
-        if response.status_code != 200:
-            return None
-        return response.json()['data']
+    # def hot_search():
+    #     url = 'https://weibo.com/ajax/side/hotSearch'
+    #     response = requests.get(url)
+    #     if response.status_code != 200:
+    #         return None
+    #     return response.json()['data']
 
-    num = 20
-    data = hot_search()
-    if not data:
-        print('获取微博热搜榜失败')
+    # num = 20
+    # data = hot_search()
+    # if not data:
+    #     print('获取微博热搜榜失败')
         
-    # 获取热搜榜
-    lines = [f"置顶:{data['hotgov']['word'].strip('#')}"]
-    for i, rs in enumerate(data['realtime'][:num], 1):
-        title = rs['word']
-        try:
-            label = rs['label_name']
-            if label in ['新','爆','沸']:
-                label = label
-            else:
-                label = ''
-        except:
-            label = ''
-        lines.append(f"{i}. {title} {label}")
-    message = "\n".join(lines)
-    return message
+    # # 获取热搜榜
+    # lines = [f"置顶:{data['hotgov']['word'].strip('#')}"]
+    # for i, rs in enumerate(data['realtime'][:num], 1):
+    #     title = rs['word']
+    #     try:
+    #         label = rs['label_name']
+    #         if label in ['新','爆','沸']:
+    #             label = label
+    #         else:
+    #             label = ''
+    #     except:
+    #         label = ''
+    #     lines.append(f"{i}. {title} {label}")
+    # message = "\n".join(lines)
+    return weibo_hot_searchV1()
 
 
-def get_weather(city_name):
-    # 替换为你使用的天气API的URL
-    url = f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&units=metric&appid=366b93ba811ef23759f9135fc3cb3f0b"
-    
-    try:
-        response = requests.get(url)
-        data = json.loads(response.text)
-        
-        if data["cod"] == 200:
-            weather_info = {
-                "city": data["name"],
-                "temperature": data["main"]["temp"],
-                "description": data["weather"][0]["description"],
-                "humidity": data["main"]["humidity"],
-                "wind_speed": data["wind"]["speed"]
-            }
-            
-            return weather_info
-        else:
-            return {"error": "City not found"}
-    except Exception as e:
-        return {"error": f"An error occurred: {e}"}
     
 
 @tool
@@ -204,29 +174,29 @@ def douban_movies() -> str:
     """查看/看看 最新有什么新电影,返回中文
     只返回前10个 电影名 (主演和电影类型不返回)
     """
-    Header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36',
-          'Referer': 'https://movie.douban.com/cinema/later/beijing/'}
+    # Header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36',
+    #       'Referer': 'https://movie.douban.com/cinema/later/beijing/'}
 
-    Url = 'https://movie.douban.com/cinema/nowplaying/beijing/'
-    Reqs = requests.get(url=Url, headers=Header)
-    jier = Reqs.text
-    # print(jier)
+    # Url = 'https://movie.douban.com/cinema/nowplaying/beijing/'
+    # Reqs = requests.get(url=Url, headers=Header)
+    # jier = Reqs.text
+    # # print(jier)
 
-    # 获取正在上映的Div下的list
-    A_Html = etree.HTML(jier)
-    Div_Html = A_Html.xpath('//*[@id="nowplaying"]//ul[@class="lists"]')[0]
-    Li_Html = Div_Html.xpath('./li')
-    messageList = []
-    index = 1
-    for limv in Li_Html:
-        if index <= 15:
-            title = limv.xpath('@data-title')[0].strip()
-            score = limv.xpath('@data-score')[0].strip() 
-            actors =  limv.xpath('@data-actors')[0].strip()  
-            messageList.append(f"{index}.{title},评分:{score},演员:{actors}")
-        index = index + 1
-    message = "\n".join(messageList)
-    return message
+    # # 获取正在上映的Div下的list
+    # A_Html = etree.HTML(jier)
+    # Div_Html = A_Html.xpath('//*[@id="nowplaying"]//ul[@class="lists"]')[0]
+    # Li_Html = Div_Html.xpath('./li')
+    # messageList = []
+    # index = 1
+    # for limv in Li_Html:
+    #     if index <= 15:
+    #         title = limv.xpath('@data-title')[0].strip()
+    #         score = limv.xpath('@data-score')[0].strip() 
+    #         actors =  limv.xpath('@data-actors')[0].strip()  
+    #         messageList.append(f"{index}.{title},评分:{score},演员:{actors}")
+    #     index = index + 1
+    # message = "\n".join(messageList)
+    return douban_moviesV1()
 
 @tool
 def search(query:str) -> str:

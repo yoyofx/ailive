@@ -24,7 +24,7 @@ const Current: FC<CurrentType> = ({ modelPath, width, height }) => {
 
   useEffect(() => {
     const { basePath, modelName } = parseModelPath(modelPath)
-    new (window as any).l2dViewer({
+    const l2d = new (window as any).l2dViewer({
       el: live2dRef.current,
       basePath,
       modelName,
@@ -32,6 +32,7 @@ const Current: FC<CurrentType> = ({ modelPath, width, height }) => {
       height,
       autoMotion: true,
     })
+    console.log(l2d)
   }, [modelPath, width, height])
 
   return <div className="live2d" ref={live2dRef} key={+new Date()}></div>
