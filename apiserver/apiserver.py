@@ -9,10 +9,14 @@ from fastapi import FastAPI,WebSocket
 from fastapi.responses import StreamingResponse,JSONResponse
 import edge_tts as tts
 from pydantic import BaseModel
+from fastapi.staticfiles import StaticFiles
+
 
 agent_executor = initialization("./config.toml")
  
 app = FastAPI()
+
+app.mount("/assets", StaticFiles(directory="./assets"), name="static")
 
 print("listening .......")
 
