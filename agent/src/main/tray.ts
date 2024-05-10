@@ -242,7 +242,7 @@ const initTray = (mainWindow: BrowserWindow) => {
     {
       label: cl.feedback,
       click: () => {
-        shell.openExternal('https://github.com/zenghongtu/PPet/issues')
+        shell.openExternal('https://github.com/yoyofx/ailive/issues')
       },
     },
     {

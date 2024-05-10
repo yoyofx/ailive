@@ -28,7 +28,7 @@
 - [x] 忽略点击
 - [x] 开机启动
 - [x] 拖动位置
-- [ ] AI
+- [X] AI
 
 ## 安装
 
@@ -61,7 +61,7 @@ npm start
 
 ## 欢迎参与贡献
 
-发现了错误? 向我发起一个 PR 吧! 参考 [Commit message 和 Change log 编写指南 - 阮一峰的网络日志](http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html) 提交 commit 即可。
+发现了错误? 向我发起一个 PR 吧! 参考 [Commit message 和 Change log 编写指南](http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html) 提交 commit 即可。
 ## 其他
 
 Model资源： [yoyofx/live2d-model-assets](https://github.com/yoyofx/live2d-model-assets)

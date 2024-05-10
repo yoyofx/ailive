@@ -1,7 +1,7 @@
 {
-  "productName": "PPet3",
-  "artifactName": "PPet3-${version}.${ext}",
-  "appId": "com.zenghongtu.ppet-v3",
+  "productName": "Ailive",
+  "artifactName": "Ailive-${version}.${ext}",
+  "appId": "com.ailive.v1",
   "asar": true,
   "files": ["dist", "package.json", "static/**/*"],
   "mac": {
@@ -28,7 +28,7 @@
   "nsis": {
     "createDesktopShortcut": "always",
     "createStartMenuShortcut": true,
-    "shortcutName": "PPet",
+    "shortcutName": "ailive",
     "oneClick": false,
     "perMachine": true,
     "allowToChangeInstallationDirectory": true,
@@ -67,8 +67,8 @@
   "publish": [
     {
       "provider": "github",
-      "owner": "zenghongtu",
-      "repo": "PPet"
+      "owner": "yoyofx",
+      "repo": "Ailive"
     }
   ],
   "directories": {
