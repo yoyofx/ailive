@@ -188,8 +188,17 @@ const Model = () => {
 
   const onMessage = async(text: string) => {
     showMessage(text, 8000)
-    const res = await axios.post('http://127.0.0.1:8000/text2audio', {
-      text:text
+    const useChatEngine = "gpt_sovits" //edge_tts
+    let url = ""
+    if (useChatEngine == "edge_tts") {
+      url = "http://127.0.0.1:8000/text2audio"
+    } else if (useChatEngine === "gpt_sovits") {
+      url = "http://127.0.0.1:9880"
+    }
+
+    const res = await axios.post(url, {
+      text:text,
+      text_language: 'zh'
     },{
       responseType: 'arraybuffer'
     })
