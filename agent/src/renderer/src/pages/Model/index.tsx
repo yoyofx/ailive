@@ -172,13 +172,18 @@ const Model = () => {
   const doubleClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
     let text: string = "hello"
     handleMessageChange({ text, timeout: 2000,  priority: 1})
+    chatboxRef.current.hideLoading()
   }
 
 
 
   const [ws,setWS] = useState<WebSocket>()
+  // let chatboxRef = React.createRef<any>();
+  const chatboxRef = useRef<any>()
+
 
   const onChat = (text: string) => {
+    chatboxRef.current.showLoading()
     ws?.send(text)
   }
 
@@ -186,8 +191,14 @@ const Model = () => {
 
   // const audioContext = new AudioContext();
 
+  const HideLoading = () => {
+    chatboxRef.current.hideLoading()
+  }
+
   const onMessage = async(text: string) => {
+    chatboxRef.current.hideLoading()
     showMessage(text, 8000)
+
     const useChatEngine = "gpt_sovits" //edge_tts
     let url = ""
     if (useChatEngine == "edge_tts") {
@@ -239,7 +250,7 @@ const Model = () => {
       </RenderWrapper>
       
       <WebSocketComponent url='ws://localhost:8000/ws' onMessage={onMessage} setWS={setWS}></WebSocketComponent>
-      <Footbar onEnterPress={onChat}></Footbar>
+      <Footbar onRef={chatboxRef} onEnterPress={onChat}></Footbar>
     </Wrapper>
   )
 }
