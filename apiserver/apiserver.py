@@ -10,6 +10,7 @@ from fastapi.responses import StreamingResponse,JSONResponse
 import edge_tts as tts
 from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
+import uvicorn
 
 
 agent_executor = initialization("./config.toml")
@@ -93,3 +94,6 @@ def getVoiceList():
     for key, val in voiceMap.items(): 
         new_list.append({ "name": key, "value": val}) 
     return ApiResult(data=new_list)
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000, workers=1)
