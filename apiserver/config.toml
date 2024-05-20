@@ -6,13 +6,20 @@ mode = "langchain"
 apikey = "90c3e3f68c6df9f5e628865491443d3545fbaaf8"
 
 [openai]
-api_key = "lXD9PbvalIcBxZf3Oh3EF8M0ETOmhQ1AI0OQXmUfb0trU9tr"
+
 max_tokens = 1500
 
+# api2d
+#api_key = "s-fk224285-rmfTvLRKQyarQdyF5YBX6IlfKVKTj1y0"
+#url = "https://openai.api2d.net/v1"
+#model = "gpt-4o"
+
 # aiproxy.io
+#api_key = "lXD9PbvalIcBxZf3Oh3EF8M0ETOmhQ1AI0OQXmUfb0trU9tr"
 url = "https://api.aiproxy.io/v1"
 model = "gpt-3.5-turbo"
-#model = "gpt-4-0613"
+#model = "gpt-4o"
+
 
 # ollama
 #url = "http://127.0.0.1:11434/v1"
@@ -24,7 +31,7 @@ model = "gpt-3.5-turbo"
 
 [character]
 voice = "zh-CN-XiaoyiNeural"
-tools = ["time","tomorrow","weather","baidu_hot_search","weibo_hot_search","douban_movies"]
+tools = ["search","time","tomorrow","weather","baidu_hot_search","weibo_hot_search","douban_movies"]
 
 # ["note","play_music","pause_music"]
 description = '''

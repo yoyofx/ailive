@@ -197,7 +197,8 @@ const Model = () => {
 
   const onMessage = async(text: string) => {
     chatboxRef.current.hideLoading()
-    showMessage(text, 8000)
+    setTips(null)
+    showMessage(text, 18000)
 
     const useChatEngine = "gpt_sovits" //edge_tts
     let url = ""
