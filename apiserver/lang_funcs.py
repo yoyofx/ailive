@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI,AzureChatOpenAI
 from langchain_community.vectorstores import Chroma,FAISS,VectorStore
 from langchain_core.documents import Document
 from langchain_community.document_loaders import TextLoader,PyMuPDFLoader,DirectoryLoader,BiliBiliLoader
@@ -42,12 +42,22 @@ def create_llm_openai(apikey:str="" ,apibase:str="",model:str="", max_tokens: Op
         os.environ['https_proxy'] = "socks5h://" + str 
 
     os.environ['NLTK_DATA'] = os.path.join(os.path.abspath('.'), "nltk_data")
-    os.environ['OPENAI_API_BASE'] =  apibase
-    os.environ['OPENAI_API_KEY'] = apikey
     defaultModelName = 'gpt-3.5-turbo'
     if model != "":
         defaultModelName = model
-    llm = ChatOpenAI(temperature=0.95 , model_name = defaultModelName, max_tokens=max_tokens,)
+    
+    if "azure" in apibase:
+        os.environ["AZURE_OPENAI_API_KEY"] = apikey
+        os.environ["AZURE_OPENAI_ENDPOINT"] = apibase
+        os.environ["OPENAI_API_VERSION"] = "2024-05-01-preview"
+        llm = AzureChatOpenAI( azure_deployment = "vision",
+                               model = defaultModelName,
+                               temperature = 0.8, ).bind(response_format={"type": "json_object"} )
+    else:
+        os.environ['OPENAI_API_BASE'] =  apibase
+        os.environ['OPENAI_API_KEY'] = apikey
+        llm = ChatOpenAI(temperature=0.95 , model_name = defaultModelName, max_tokens=max_tokens,)
+    
     return llm
 
 def create_llm_agent(llm:BaseLanguageModel,prompt:str,tools:List) -> AgentExecutor: 

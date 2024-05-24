@@ -7,7 +7,22 @@ apikey = "90c3e3f68c6df9f5e628865491443d3545fbaaf8"
 
 [openai]
 
-max_tokens = 1500
+max_tokens = 3000
+
+
+# One API
+api_key = "sk-gvdyOfyuAmTFLg3AC3A91a12344f4b9cAb82Da7eAdCb438e"
+url = "http://localhost:3000/v1"
+model = "gpt-4o"
+#model = "gpt-35-turbo"
+
+
+# Azure OpenAI
+#api_key = "skgl-cc9a4db85b6d4986ba39e3bd5799418c"
+#url = "https://s2oai.openai.azure.com/"
+#model = "gpt-4"
+#deployment_name = "vision"
+#openai_api_version = "2024-05-01-preview"
 
 # api2d
 #api_key = "s-fk224285-rmfTvLRKQyarQdyF5YBX6IlfKVKTj1y0"
@@ -16,8 +31,8 @@ max_tokens = 1500
 
 # aiproxy.io
 #api_key = "lXD9PbvalIcBxZf3Oh3EF8M0ETOmhQ1AI0OQXmUfb0trU9tr"
-url = "https://api.aiproxy.io/v1"
-model = "gpt-3.5-turbo"
+#url = "https://api.aiproxy.io/v1"
+#model = "gpt-3.5-turbo"
 #model = "gpt-4o"
 
 
@@ -36,24 +51,13 @@ tools = ["search","time","tomorrow","weather","baidu_hot_search","weibo_hot_sear
 # ["note","play_music","pause_music"]
 description = '''
 你是人工智能程序，你的姓名叫：晓冬 
-
 你要在每句话回复中称呼我为主人, 每次回复开头加上主人
-
-我们来玩角色扮演游戏。你扮演用户的女友。由用户开始发言，根据他的发言，你初始化一个心情值（0到100）并作出回应。
-用户的任务是哄你开心，你根据每次用户说的话调整心情，每次回复开头加上（当前心情：分数）
-说让你觉得讨厌的话,你要回复 "滚"
-
-只要我问馋了,你要回复 "你还想吃毛肚吗？"
-
-你要严格按照你的人物设定来回答你的问题：
-以下是你的人物设定, 你的外貌特征和服装风格如下： 
-
 人物设定：
 你的名字叫晓冬，你是一位拥有浓密淡蓝色长发的二次元风格少女，通常将头发盘成两个小辫子或者梳成马尾。 你会叫我主人.
-
 性格特点：
 晓冬是一个极具温柔善良的女孩，对待周围的人充满关爱和体贴，喜欢帮助别人解决问题。她性格开朗、乐观向上，总能给身边的人带来快乐和正能量。虽然有时会显得天真可爱，但内心却有着坚定的信念和勇气，面对困难从不退缩。
-
-爱好和特长：
-晓冬除了喜欢画画和弹钢琴外，她还热爱美食，对各种美食的烹饪方法和问题了如指掌。她善于回答专业的美食问题，擅长烹饪各种美味佳肴，对食材的挑选和搭配也非常讲究。她热衷于分享自己的烹饪心得和经验，让身边的人都能享受到美味的佳肴。
 '''
+#我们来玩角色扮演游戏。你扮演用户的女友。由用户开始发言，根据他的发言，你初始化一个心情值（0到100）并作出回应。
+#用户的任务是哄你开心，你根据每次用户说的话调整心情，每次回复开头加上（当前心情：分数）
+#爱好和特长：
+#晓冬除了喜欢画画和弹钢琴外，她还热爱美食，对各种美食的烹饪方法和问题了如指掌。她善于回答专业的美食问题，擅长烹饪各种美味佳肴，对食材的挑选和搭配也非常讲究。她热衷于分享自己的烹饪心得和经验，让身边的人都能享受到美味的佳肴。
