@@ -205,7 +205,7 @@ const Model = () => {
     if (useChatEngine == "edge_tts") {
       url = "http://127.0.0.1:8000/text2audio"
     } else if (useChatEngine === "gpt_sovits") {
-      url = "http://127.0.0.1:9880"
+      url = "http://chat.kubelilin.com:9880"
     }
 
     const res = await axios.post(url, {

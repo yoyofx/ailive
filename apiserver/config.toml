@@ -11,15 +11,16 @@ max_tokens = 3000
 
 
 # One API
-api_key = "sk-gvdyOfyuAmTFLg3AC3A91a12344f4b9cAb82Da7eAdCb438e"
-url = "http://localhost:3000/v1"
+api_key = "B4YKPxjgiC12kRDh16Aa91A619E0480fB2EcD98b6324F4D6"
+url = "http://chat.kubelilin.com:3000/v1"
+#model = "SparkDesk-v3.5"
 model = "gpt-4o"
 #model = "gpt-35-turbo"
 
 
 # Azure OpenAI
-#api_key = "skgl-cc9a4db85b6d4986ba39e3bd5799418c"
-#url = "https://s2oai.openai.azure.com/"
+#api_key = ""
+#url = "https://xxx.openai.azure.com/"
 #model = "gpt-4"
 #deployment_name = "vision"
 #openai_api_version = "2024-05-01-preview"
